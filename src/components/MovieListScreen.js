@@ -4,43 +4,37 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 import MovieItem from "./MovieItem";
-import MovieViewModel from "../viewmodels/MovieViewModel";
+import { observer } from "mobx-react";
 
-const MovieListScreen = ({ movieList }) => {
-  const movieViewModel = new MovieViewModel();
-  const { movies, isLoading, fetchMovies } = movieViewModel;
+const MovieListScreen = (props) => {
+  const { movies, fetchMovies } = props.store;
+
   useEffect(() => {
-    fetchMovies(movieList);
-  }, [fetchMovies, movieList]);
+    fetchMovies(props.movieList);
+  }, []);
 
   return (
-    <View style={styles.container}>
-      {isLoading ? (
-        <ActivityIndicator
-          size="large"
-          color="#000"
-          style={styles.loadingIndicator}
-        />
-      ) : (
+    <SafeAreaView>
+      <View style={styles.container}>
         <>
-          <Text style={styles.title}>{movieList} Movies</Text>
+          <Text style={styles.title}>{props.movieList} Movies</Text>
           <FlatList
             data={movies}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <MovieItem movie={item} />}
+            horizontal
           />
         </>
-      )}
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
   },
   loadingIndicator: {
@@ -60,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MovieListScreen;
+export default observer(MovieListScreen);

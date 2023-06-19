@@ -1,18 +1,18 @@
 import React from "react";
 import MovieViewModel from "./src/viewmodels/MovieViewModel";
 import MovieListScreen from "./src/components/MovieListScreen";
+import { MoviesStore } from "./src/Store";
+import { ScrollView } from "react-native";
 
-const movieViewModel = new MovieViewModel();
 
 const App = () => {
-
-
+const store = new MoviesStore()
   return (
-      <>
-      <MovieListScreen movieList="popular" />
-      <MovieListScreen movieList="top_rated" />
-      <MovieListScreen movieList="now_playing" />
-    </>
+      <ScrollView>
+      <MovieListScreen store={store} movieList="popular" />
+      <MovieListScreen store={store}  movieList="top_rated" />
+      <MovieListScreen store={store}  movieList="now_playing" />
+    </ScrollView>
   );
 };
 
