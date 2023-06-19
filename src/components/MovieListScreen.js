@@ -1,35 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import MovieItem from './MovieItem';
-import { fetchMovies } from '../data/tmdbApi';
+import MovieViewModel from '../viewmodels/MovieViewModel';
 
-const MovieListScreen = ({ movieList }) => {
-  const [movies, setMovies] = useState([]);
+const movieViewModel = new MovieViewModel();
+
+const MovieListScreen = observer(({ movieList }) => {
+  const { movies, isLoading, error, fetchMovies } = movieViewModel;
 
   useEffect(() => {
-    fetchMovies(movieList)
-      .then((movies) => setMovies(movies))
-      .catch((error) => console.error(`Error fetching ${movieList} movies:`, error));
-
-  }, [movieList]);
+    fetchMovies(movieList);
+    console.log(movies);
+  }, [fetchMovies, movieList]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{movieList} Movies</Text>
-      <FlatList
-        data={movies}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <MovieItem movie={item} />}
-        horizontal
-      />
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#000" style={styles.loadingIndicator} />
+      ) : error ? (
+        <Text style={styles.errorText}>Error: {error.message}</Text>
+      ) : (
+        <>
+          <Text style={styles.title}>{movieList} Movies</Text>
+          <FlatList
+            data={movies}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <MovieItem movie={item} />}
+          />
+        </>
+      )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'red',
   },
   title: {
     fontSize: 20,

@@ -6,7 +6,7 @@ const App = () => {
 
   useEffect(() => {
     // Define the movie lists you want to render
-    const lists = ["popular", "top_rated", "now_playing"];
+    const lists = ["popular", "top_rated", "now_playing", "upcoming"];
 
     setMovieLists(lists);
   }, []);
