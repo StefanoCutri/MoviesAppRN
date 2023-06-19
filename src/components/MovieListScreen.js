@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { observer, inject } from "mobx-react";
 import {
   View,
   Text,
@@ -8,10 +7,11 @@ import {
   ActivityIndicator,
 } from "react-native";
 import MovieItem from "./MovieItem";
+import MovieViewModel from "../viewmodels/MovieViewModel";
 
-const MovieListScreen = inject('moviesViewModel')(observer(({ movieList, moviesViewModel }) => {
-  console.log(moviesViewModel);
-  const { movies, isLoading, fetchMovies } = moviesViewModel;
+const MovieListScreen = ({ movieList }) => {
+  const movieViewModel = new MovieViewModel();
+  const { movies, isLoading, fetchMovies } = movieViewModel;
   useEffect(() => {
     fetchMovies(movieList);
   }, [fetchMovies, movieList]);
@@ -27,16 +27,16 @@ const MovieListScreen = inject('moviesViewModel')(observer(({ movieList, moviesV
       ) : (
         <>
           <Text style={styles.title}>{movieList} Movies</Text>
-          {/* <FlatList
+          <FlatList
             data={movies}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <MovieItem movie={item} />}
-          /> */}
+          />
         </>
       )}
     </View>
   );
-}));
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -61,4 +61,3 @@ const styles = StyleSheet.create({
 });
 
 export default MovieListScreen;
-

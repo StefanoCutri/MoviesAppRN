@@ -1,15 +1,17 @@
 import Movie from "../models/Movie";
 import { fetchApiMovies } from "../data/tmdbApi";
-import { observable } from "mobx";
 
 class MovieViewModel {
-  @observable movies = [];
-  @observable isLoading = false;
+  constructor(){
+    this.movies = [];
+    this.isLoading = false;
+  }
 
   async fetchMovies(movieList) {
     try {
       this.isLoading = true;
       const movieData = await fetchApiMovies(movieList);
+      console.log(movieData);
       const moviesFetched = movieData.map(
         (data) =>
           new Movie(
@@ -20,8 +22,7 @@ class MovieViewModel {
             data.overview
           )
       );
-      // console.log("moviesFetched", moviesFetched);
-      movies = "123";
+      movies = moviesFetched
       isLoading = false;
     } catch (error) {
       console.error(`Error fetching ${movieList} movies:`, error);
