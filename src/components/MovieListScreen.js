@@ -1,38 +1,42 @@
-import React, { useEffect } from 'react';
-import { observer } from 'mobx-react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import MovieItem from './MovieItem';
-import MovieViewModel from '../viewmodels/MovieViewModel';
+import React, { useEffect } from "react";
+import { observer, inject } from "mobx-react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import MovieItem from "./MovieItem";
 
-const movieViewModel = new MovieViewModel();
-
-const MovieListScreen = observer(({ movieList }) => {
-  const { movies, isLoading, error, fetchMovies } = movieViewModel;
-
+const MovieListScreen = inject('moviesViewModel')(observer(({ movieList, moviesViewModel }) => {
+  console.log(moviesViewModel);
+  const { movies, isLoading, fetchMovies } = moviesViewModel;
   useEffect(() => {
     fetchMovies(movieList);
-    console.log(movies);
   }, [fetchMovies, movieList]);
 
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <ActivityIndicator size="large" color="#000" style={styles.loadingIndicator} />
-      ) : error ? (
-        <Text style={styles.errorText}>Error: {error.message}</Text>
+        <ActivityIndicator
+          size="large"
+          color="#000"
+          style={styles.loadingIndicator}
+        />
       ) : (
         <>
           <Text style={styles.title}>{movieList} Movies</Text>
-          <FlatList
+          {/* <FlatList
             data={movies}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => <MovieItem movie={item} />}
-          />
+          /> */}
         </>
       )}
     </View>
   );
-});
+}));
 
 const styles = StyleSheet.create({
   container: {
@@ -41,19 +45,20 @@ const styles = StyleSheet.create({
   },
   loadingIndicator: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   errorText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: 'red',
+    fontWeight: "bold",
+    color: "red",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
 });
 
 export default MovieListScreen;
+

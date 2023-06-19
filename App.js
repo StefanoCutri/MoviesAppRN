@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Provider } from "mobx-react";
+import MovieViewModel from "./src/viewmodels/MovieViewModel";
 import MovieListScreen from "./src/components/MovieListScreen";
 
+const movieViewModel = new MovieViewModel();
+
 const App = () => {
-  const [movieLists, setMovieLists] = useState([]);
 
-  useEffect(() => {
-    // Define the movie lists you want to render
-    const lists = ["popular", "top_rated", "now_playing", "upcoming"];
-
-    setMovieLists(lists);
-  }, []);
 
   return (
-    <>
-      {movieLists.map((list) => (
-        <MovieListScreen key={list} movieList={list} />
-      ))}
-    </>
+      <Provider moviesViewModel={movieViewModel}>
+      <MovieListScreen movieList="popular" />
+      <MovieListScreen movieList="top_rated" />
+      <MovieListScreen movieList="now_playing" />
+    </Provider>
   );
 };
 
