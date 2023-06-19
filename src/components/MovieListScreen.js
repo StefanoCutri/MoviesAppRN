@@ -20,6 +20,7 @@ const MovieListScreen = ({ movieList }) => {
         data={movies}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <MovieItem movie={item} />}
+        horizontal
       />
     </View>
   );
