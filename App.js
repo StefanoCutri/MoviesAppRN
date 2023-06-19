@@ -1,55 +1,23 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MovieListScreen from './src/components/MovieListScreen';
 
-export default function App() {
-  return <MovieListScreen />;
-}
+const App = () => {
+  const [movieLists, setMovieLists] = useState([]);
 
-// MVP: Presenter
-// const MovieListPresenter = ({ movies }) => {
-//   const renderMovieItem = ({ item }) => (
-//     <SafeAreaView>
-//       <View style={{ marginBottom: 20 }}>
-//         <Image
-//           source={{ uri: `https://image.tmdb.org/t/p/w200${item.poster_path}` }}
-//           style={{ width: 200, height: 300 }}
-//         />
-//         <Text style={{ fontSize: 18 }}>{item.title}</Text>
-//       </View>
-//     </SafeAreaView>
-//   );
+  useEffect(() => {
+    // Define the movie lists you want to render
+    const lists = ['popular', 'top_rated', 'now_playing'];
 
-//   return (
-//     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//       <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
-//         Popular Movies
-//       </Text>
-//       <FlatList
-//         data={movies}
-//         renderItem={renderMovieItem}
-//         keyExtractor={(item) => item.id.toString()}
-//         contentContainerStyle={{ paddingHorizontal: 20 }}
-//       />
-//     </View>
-//   );
-// };
+    setMovieLists(lists);
+  }, []);
 
-// MVVM: ViewModel
-// const MovieListViewModel = () => {
-//   const [movies, setMovies] = useState([]);
+  return (
+    <>
+      {movieLists.map((list) => (
+        <MovieListScreen key={list} movieList={list} />
+      ))}
+    </>
+  );
+};
 
-//   const fetchMovies = async () => {
-//     const data = await fetchPopularMovies();
-//     setMovies(data.results);
-//   };
-//   useEffect(() => {
-//     fetchMovies();
-//   }, []);
-
-//   return <MovieListPresenter movies={movies} />;
-// };
-
-// export default function App() {
-//   return <MovieListViewModel />;
-// }
+export default App;

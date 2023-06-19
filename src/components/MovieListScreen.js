@@ -1,43 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, SafeAreaView } from "react-native";
-import MovieItem from "./MovieItem";
-import MovieUseCase from "../domain/MovieUseCase";
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import MovieItem from './MovieItem';
+import { fetchMovies } from '../data/tmdbApi';
 
-const movieUseCase = new MovieUseCase();
-
-const MovieListScreen = () => {
+const MovieListScreen = ({ movieList }) => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(movieList)
+      .then((movies) => setMovies(movies))
+      .catch((error) => console.error(`Error fetching ${movieList} movies:`, error));
 
-  const fetchMovies = async () => {
-    try {
-      const movies = await movieUseCase.fetchPopularMovies();
-      setMovies(movies);
-    } catch (error) {
-      console.error("Error fetching popular movies:", error);
-    }
-  };
-
-  const renderMovieItem = ({ item }) => <MovieItem movie={item} />;
+  }, [movieList]);
 
   return (
-    <SafeAreaView>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>
-          Popular Movies
-        </Text>
-        <FlatList
-          data={movies}
-          renderItem={renderMovieItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingHorizontal: 20 }}
-        />
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.title}>{movieList} Movies</Text>
+      <FlatList
+        data={movies}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <MovieItem movie={item} />}
+      />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+});
 
 export default MovieListScreen;

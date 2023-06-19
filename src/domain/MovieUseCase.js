@@ -1,16 +1,12 @@
-import MovieRepository from "./MovieRespository";
+import { fetchMovies } from "../data/tmdbApi";
 
 class MovieUseCase {
-  constructor() {
-    this.movieRepository = new MovieRepository();
-  }
-
-  async fetchPopularMovies() {
+  async fetchMovies(movieList) {
     try {
-      const movies = await this.movieRepository.fetchPopularMovies();
+      const movies = await fetchMovies(movieList);
       return movies;
     } catch (error) {
-      console.error('Error fetching popular movies:', error);
+      console.error(`Error fetching ${movieList} movies:`, error);
       throw error;
     }
   }
